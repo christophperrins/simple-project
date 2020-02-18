@@ -8,20 +8,22 @@ These instructions will get you a copy of the project up and running on your loc
 You will need to download and install the following pieces of software:
 * [Java](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) - version 8 is recommended
 * [Maven](https://www.baeldung.com/install-maven-on-windows-linux-mac)
-* [Docker](https://docs.docker.com/install/)
-* [Docker-compose](https://docs.docker.com/compose/install/)
+* Some kind of web server. I would recommend downloading [Visual Studio Code](https://code.visualstudio.com/). Download the LiveServer Extension, Open the folder at simple-project/client/ and then right click the index.html and run live-server from this location
 
 ## Installation
-To run the application you will need to run the following lines of code
+To run the application backend you will need to run the following lines of code
 ```sh
 git clone https://github.com/christophperrins/simple-project
-cd simple-project
-mvn package -DskipTests
-docker-compose build
-docker-compose up -d
+cd simple-project/server
+mvn spring-boot:run
 ```
 
-## Running the Tests
+To check that it is running you should navigate to:
+http://localhost:8081/swagger-ui.html
+
+## Running the Backend Tests
+Inside the server folder:
+
 To run JUnit tests on the controller and service classes:
 ```sh
 mvn test -Dtest=ControllerAndServiceSuite
@@ -38,8 +40,6 @@ mvn test -Dtest=SeleniumSuite
 ``` 
 
 ## Built with
-* [Apache Http server](https://httpd.apache.org/)
-* Docker Containers
 * [SpringBoot](https://spring.io/projects/spring-boot)
 
 ## Versioning
@@ -52,67 +52,6 @@ We use SemVer for versioning. For the versions available, see the tags on this r
 This project is licensed under the GPL-v3 License - see the LICENSE file for details
 
 # Notes (DO NOT INCLUDE in your projects)
-## Devops
-### Docker-compose.yml
-Docker is a containerisation tool. I've thrown this in as it will be useful for you to throw your applications into a container, so that you can easily update the images, which will inturn update the containers.
-
-The yaml file looks like the following
-
-``` yaml
-version: '3'
-services:
-  client:
-    build: ./client/
-    ports:
-      - "80:80"
-  server:
-    build: ./server/
-    ports:
-      - "8081:8081"
-```
-
-It is doing the following, creating two services - one is called client and one is called server (these are names you give it, they have no special meaning here). 
-
-First - it builds two images, one from the client folder and one from the server folder.
-Second - it port forwards any requests the machine to the port in the container
-
-
-How does it know what to build? This is where the Dockerfile comes in. Lets have a look at the server/Dockerfile
-``` Dockerfile
-FROM java:8-jdk-alpine
-
-COPY ./target/notes-0.0.1.jar /usr/app/
-
-ENTRYPOINT ["java","-jar","usr/app/notes-0.0.1.jar"]
-```
-
-FROM - this is the image we are going to be putting out items into. A container is an instance of an image. Containers are similar to VM's but are much more lightweight.
-COPY - this will copy the jar file on the machine, and put it into the /usr/app/ folder within the container. Previously to this it is important to run mvn package or mvn install so that the jar is available in the target folder.
-ENTRYPOINT - similar to a command that gets run when an the container is run.
-
-Looking at the client dockerfile:
-``` Dockerfile
-FROM httpd:2.4
-COPY ./public-html/* /usr/local/apache2/htdocs/
-```
-
-httpd:2.4 is the code given the the apache server. This way you don't have to muddle about with permissions on your machine, everything is containerised.
-
-
-### Docker images
-To build the images from these two Dockerfiles in one command, place the cwd in the base folder and run:
-> docker-compose build
-
-Next it is possible to see the images with:
-> docker image ls
-
-To run the made images, here it is possible with:
-> docker-compose up -d
-
-You can check if the containers are running with:
-> docker container ls
-
----
 
 ### Jenkins pipeline
 Jenkins pipelines offer slightly more flexibility than freestyle projects - they also allow for multibranch pipelines so that pull requests can be automatically tested.
@@ -123,14 +62,11 @@ The Jenkinsfile tests, stages and deploys your application.
 
 ---
 
-## Client
-This was done quite quickly so you might expect to see a lot of bad practice (do not replicate the bad practice - this was a quick thing to show an example).
-
-Full CRUD achieved. 
-
----
 
 ## Server
+
+### com.qa.config
+A config file exists in here. It tells the java project how to create a particular bean. A bean is a managed class which can be injected into other locations later.
 
 ### com.qa.controller
 This is where the endpoints are located
