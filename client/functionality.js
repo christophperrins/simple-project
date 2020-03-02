@@ -137,7 +137,7 @@ function noteRequestHandler(method, body, extension) {
  * @param {Note} body 
  */
 function httpRequest(method, endpoint, callback, headers, body){
-    let URL = "";
+    let URL = "http://" +location.hostname + ":8081/";
     let request = new XMLHttpRequest();
     request.open(method, URL + endpoint);
     request.onload = () => {
