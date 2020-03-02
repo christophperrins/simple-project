@@ -13,14 +13,9 @@
     <div class="flex-container">
         <div class="row">
             <div class="col">
-
-                    <textarea class="m-2 form-control" id="textInput" type="text" placeholder="Enter a note" name="noteValue"></textarea>
-
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-4 col-md-6 col-sm-10">
-                <button class="m-2 w-100 btn btn-success" id="submitInput" type="submit" onclick="postNote()">Submit</button>
+		<form onsubmit="postNote(event)">
+                    <input class="m-2 form-control" id="textInput" type="text" placeholder="Enter a note" name="noteValue"></input>
+		</form>
             </div>
         </div>
     </div>
