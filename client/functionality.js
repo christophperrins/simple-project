@@ -16,7 +16,8 @@ function getData() {
 /**
  * Posts a note to the backend by collecting data from the user
  */
-function postNote() {
+function postNote(event) {
+    event.preventDefault();
     let data = document.getElementById("textInput");
     if(data.value){
         noteRequestHandler("POST", {"text": data.value});
@@ -112,7 +113,7 @@ function noteRequestHandler(method, body, extension) {
     if (!extension){
         extension = "";
     } 
-    let endpoint = "note/" + extension;
+    let endpoint = "api/note/" + extension;
     method = method.toUpperCase();
     let callback;
     method === "GET" ? callback = render : callback = getData; 
@@ -136,7 +137,7 @@ function noteRequestHandler(method, body, extension) {
  * @param {Note} body 
  */
 function httpRequest(method, endpoint, callback, headers, body){
-    let URL = "http://" + location.hostname + ":8081/";
+    let URL = "";
     let request = new XMLHttpRequest();
     request.open(method, URL + endpoint);
     request.onload = () => {
